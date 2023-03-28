@@ -10,6 +10,8 @@ import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import router from './router'
+import vuetify from './plugins/vuetify';
 
 const firebaseConfig = {
     apiKey: "AIzaSyD9KhIlAFzhkWqAo2FUV3J13Je3WXOpmUM",
@@ -21,12 +23,9 @@ const firebaseConfig = {
     measurementId: "G-VC9L20XDTH"
   };
 
-;
-
 const analytics = getAnalytics(initializeApp(firebaseConfig));
 
-const app = createApp(App)
-
-registerPlugins(app)
-
-app.mount('#app')
+createApp(App)
+  .use(router)
+  .use(vuetify)
+  .mount('#app')

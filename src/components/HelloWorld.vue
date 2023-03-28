@@ -35,7 +35,7 @@ const register = () => {
           errMessage.value = "Mot de passe incorrect";
           break;
         default:
-          errMessage.value = "Email ou mot de passe incorrect";
+          errMessage.value = "";
           break;
       }
     });
