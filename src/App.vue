@@ -1,27 +1,57 @@
 <template>
-  <v-app>
-    <!-- Your appBar goes here -->
-    <v-app-bar app>
-      <v-toolbar-title>Mon site web</v-toolbar-title>
-      <v-list>
-        <v-list-item>
-          <router-link to="/">Accueil</router-link>
-        </v-list-item>
-        <v-list-item>
-          <router-link to="/map">Map</router-link>
-        </v-list-item>
-        <v-list-item>
-          <router-link to="/send-pic">SendPic</router-link>
-        </v-list-item>
-      </v-list>
-    </v-app-bar>
-    <div class="mt-12 mt-md-16">
-      <!-- La classe mt-12 est utilisée pour les téléphones mobiles -->
-      <router-view />
-    </div>
-  </v-app>
+    <v-layout>
+      <v-navigation-drawer v-model="drawer" temporary>
+        <v-list-item
+          prepend-avatar="img/censelette.png"
+          title="Participant 312"
+        ></v-list-item>
+
+        <v-divider></v-divider>
+
+        <v-list density="compact" nav>
+          <v-list-item
+            prepend-icon="mdi-home"
+            title="Accueil"
+            value="accueil"
+            to="/"
+          ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-map"
+            title="Itinéraires"
+            value="map"
+            to="/map"
+          ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-camera"
+            title="Pic Challenge"
+            value="pic-challenge"
+            to="/send-pic"
+          ></v-list-item>
+        </v-list>
+      </v-navigation-drawer>
+      <v-main style="height: 1000px">
+        <!-- <v-system-bar color="deep-purple darken-3"></v-system-bar> -->
+
+        <v-app-bar :elevation="0" color="grey-darken-4">
+          <v-app-bar-nav-icon
+            variant="text"
+            @click.stop="drawer = !drawer"
+          ></v-app-bar-nav-icon>
+
+          <v-toolbar-title>Bouv'Run</v-toolbar-title>
+        </v-app-bar>
+          <router-view />
+          
+      </v-main>
+    </v-layout>
 </template>
 
-<script setup>
-import HelloWorld from "@/components/HelloWorld.vue";
+<script>
+export default {
+  data() {
+    return {
+      drawer: null,
+    };
+  },
+};
 </script>

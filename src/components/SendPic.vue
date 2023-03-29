@@ -1,5 +1,5 @@
 <template>
-  <form class="form" v-if="file" style="margin-top: 100px">
+  <form class="form" v-if="file">
     <label for="file-input" class="file-label" @click="onFileClick">{{
       file.name
     }}</label>
@@ -15,17 +15,11 @@
   </form>
 </template>
 <style scoped>
-.form {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
 .file-label {
   background-color: #eeeeee;
   color: #333333;
   padding: 8px 16px;
-  border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
   flex: 1;
@@ -35,7 +29,6 @@
   background-color: #007aff;
   color: #ffffff;
   padding: 8px 16px;
-  border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
 }
@@ -47,7 +40,6 @@
   background-color: #f0f0f0;
   color: #333333;
   padding: 16px;
-  border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
   margin-top: 50px;
