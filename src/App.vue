@@ -10,6 +10,9 @@
         <v-list-item>
           <router-link to="/map">Map</router-link>
         </v-list-item>
+        <v-list-item>
+          <router-link to="/send-pic">SendPic</router-link>
+        </v-list-item>
       </v-list>
     </v-app-bar>
     <div class="mt-12 mt-md-16">

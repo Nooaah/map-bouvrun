@@ -4,6 +4,7 @@
   <p><input type="password" placeholder="Mot de passe" v-model="password" /></p>
   <p v-if="errMessage">{{ errMessage }}</p>
   <p><button @click="register">Connexion</button></p>
+  <router-link to="/send-pic">SendPic</router-link>
 </template>
 
 <script setup>
@@ -19,7 +20,7 @@ const register = () => {
     .then((data) => {
       console.log("bien enregistré");
       console.log(auth.currentUser);
-      router.push("/test");
+      router.push('/map');
       errMessage.value = "";
     })
     .catch((error) => {
