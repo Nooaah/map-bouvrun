@@ -2,7 +2,7 @@
     <v-layout>
       <v-navigation-drawer v-model="drawer" temporary>
         <v-list-item
-          prepend-avatar="img/censelette.png"
+          prepend-avatar="@/assets/img/censelette.png"
           title="Participant 312"
         ></v-list-item>
 
