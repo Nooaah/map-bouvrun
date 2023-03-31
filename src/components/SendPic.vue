@@ -15,7 +15,6 @@
   </form>
 </template>
 <style scoped>
-
 .file-label {
   background-color: #eeeeee;
   color: #333333;
@@ -61,6 +60,28 @@
 <script setup>
 import { ref } from "vue";
 import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db } from "../main";
+import { collection, addDoc, setDoc, updateDoc, doc, getDoc } from "firebase/firestore";
+
+/* try {
+  const docRef = await addDoc(collection(db, "Users"), {
+    first: "Ada",
+    last: "Lovelace",
+    born: 1815
+  });
+  console.log("Document written with ID: ", docRef.id);
+} catch (e) {
+  console.error("Error adding document: ", e);
+} */
+
+
+/* updateDoc(doc(db, "Users", "O3OQM1BPFrT3vcmduXq1aDOhuAA2"), {
+    dossard: 312
+  }).then(docRef => {
+    console.log("Doc changed");
+  }).catch(error => {
+    console.log(error);
+  }) */
 
 const file = ref(null);
 
@@ -91,6 +112,21 @@ async function uploadFile() {
       downloadURL
     );
     alert("L'image a bien été importée");
+
+    // Ajouter une nouvelle entrée dans le tableau "photos" avec les informations de la photo téléchargée
+    const userRef = doc(db, "Users", "O3OQM1BPFrT3vcmduXq1aDOhuAA2")
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      const photos = docSnap.data().photos || [];
+      photos.push({
+        id: fileName,
+        uri: downloadURL,
+      });
+      updateDoc(userRef, { photos: photos })
+    } else {
+      console.log("Le document n'existe pas");
+    }
+
   } catch (error) {
     console.error(error);
   }

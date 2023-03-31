@@ -12,6 +12,7 @@ import vuetify from './plugins/vuetify';
 import VueCookies from "vue-cookies";
 // Firebase
 import { initializeApp } from 'firebase/app';
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD9KhIlAFzhkWqAo2FUV3J13Je3WXOpmUM",
@@ -24,6 +25,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app)
 
 createApp(App)
   .use(router)
