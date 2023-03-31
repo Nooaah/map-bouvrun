@@ -71,6 +71,7 @@ button {
 <script setup>
 import { ref } from "vue";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import VueCookies from "vue-cookies";
 
 const email = ref("");
 const password = ref("");
@@ -81,11 +82,11 @@ const register = () => {
     .then((data) => {
       console.log("bien enregistré");
       console.log(auth.currentUser);
+      VueCookies.set("userId", auth.currentUser.uid);
       router.push("/map");
       errMessage.value = "";
     })
     .catch((error) => {
-      console.log(error);
       switch (error.code) {
         case "auth/invalid-email":
           errMessage.value = "Mauvais adresse Email";

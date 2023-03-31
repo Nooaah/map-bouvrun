@@ -8,6 +8,7 @@
 import App from './App.vue'
 import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
+import VueCookies from "vue-cookies";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getStorage } from "firebase/storage"; // import Firebase Storage
@@ -32,6 +33,7 @@ const storage = getStorage(app); // Initialize Firebase Storage
 createApp(App)
   .use(router)
   .use(vuetify)
+  .use(VueCookies)
   .provide('firebaseApp', app) // Ajouter le provide pour l'instance Firebase App
   .provide('firebaseStorage', storage) // Ajouter le provide pour l'instance Firebase Storage
   .mount('#app')
