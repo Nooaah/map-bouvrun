@@ -9,7 +9,7 @@
   <form v-else>
     <label for="file-input" class="file-input-label">
       <span class="plus-icon">+</span>
-      <span class="file-input-text">Importer un fichier</span>
+      <span class="file-input-text">Importer une image</span>
     </label>
     <input id="file-input" type="file" @change="onFileChange" hidden />
   </form>

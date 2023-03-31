@@ -1,5 +1,10 @@
 <template>
   <div id="map"></div>
+  <div id="call_menu">
+    <v-btn href="tel:+33671465443" id="sos_bouvrun" prepend-icon="mdi-phone" variant="outlined">
+      SOS Bouv'Run
+    </v-btn>
+  </div>
 </template>
 <script setup>
 import L from "leaflet";
@@ -83,7 +88,21 @@ export default {
 </script>
 <style>
 #map {
-  height: 1000px;
+  height: calc(100%);
   width: 100%;
+}
+#call_menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: white;
+  height: 50px;
+}
+#sos_bouvrun {
+  margin-top: 8px;
+  margin-left: 50%;
+  transform: translate(-50%);
 }
 </style>
