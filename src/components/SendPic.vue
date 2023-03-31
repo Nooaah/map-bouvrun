@@ -60,12 +60,7 @@
 </style>
 <script setup>
 import { ref } from "vue";
-import {
-  getStorage,
-  ref as stRef,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
+import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const file = ref(null);
 

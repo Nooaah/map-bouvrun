@@ -5,16 +5,13 @@
  */
 
 // Components
-import App from './App.vue'
 import { createApp } from 'vue'
-import { registerPlugins } from '@/plugins'
-import VueCookies from "vue-cookies";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getStorage } from "firebase/storage"; // import Firebase Storage
-
+import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify';
+import VueCookies from "vue-cookies";
+// Firebase
+import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
   apiKey: "AIzaSyD9KhIlAFzhkWqAo2FUV3J13Je3WXOpmUM",
@@ -27,13 +24,9 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const storage = getStorage(app); // Initialize Firebase Storage
 
 createApp(App)
   .use(router)
   .use(vuetify)
   .use(VueCookies)
-  .provide('firebaseApp', app) // Ajouter le provide pour l'instance Firebase App
-  .provide('firebaseStorage', storage) // Ajouter le provide pour l'instance Firebase Storage
   .mount('#app')
