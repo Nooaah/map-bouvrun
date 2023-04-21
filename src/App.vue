@@ -22,8 +22,14 @@
             to="/map"
           ></v-list-item>
           <v-list-item
+            prepend-icon="mdi-view-gallery-outline"
+            title="Galerie Photo"
+            value="gallery"
+            to="/gallery"
+          ></v-list-item>
+          <v-list-item
             prepend-icon="mdi-camera"
-            title="Pic Challenge"
+            title="Envoyer ma photo"
             value="pic-challenge"
             to="/send-pic"
           ></v-list-item>
@@ -39,6 +45,11 @@
           ></v-app-bar-nav-icon>
 
           <v-toolbar-title>Bouv'Run</v-toolbar-title>
+
+          <template v-slot:append>
+            <v-btn href="tel:+33671465443" icon="mdi-phone"></v-btn>
+          </template>
+
         </v-app-bar>
           <router-view />
           

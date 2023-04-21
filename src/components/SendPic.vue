@@ -4,6 +4,10 @@
       file.name
     }}</label>
     <input id="file-input" type="file" @change="onFileChange" hidden />
+    <div class="preview-image-container" v-if="preview">
+      <img class="preview-image" :src="preview" alt="Aperçu de l'image"/>
+    </div>
+
     <button class="submit-btn" @click.prevent="uploadFile">Envoyer</button>
   </form>
   <form v-else>
@@ -56,12 +60,24 @@
 .hidden-input {
   display: none;
 }
+.preview-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0 20px 0;
+}
+
+.preview-image {
+  max-width: 100%;
+  width: 100vw;
+}
 </style>
 <script setup>
 import { ref } from "vue";
 import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../main";
 import { collection, addDoc, setDoc, updateDoc, doc, getDoc } from "firebase/firestore";
+import VueCookies from "vue-cookies";
 
 /* try {
   const docRef = await addDoc(collection(db, "Users"), {
@@ -75,23 +91,18 @@ import { collection, addDoc, setDoc, updateDoc, doc, getDoc } from "firebase/fir
 } */
 
 
-/* updateDoc(doc(db, "Users", "O3OQM1BPFrT3vcmduXq1aDOhuAA2"), {
-    dossard: 312
-  }).then(docRef => {
-    console.log("Doc changed");
-  }).catch(error => {
-    console.log(error);
-  }) */
-
 const file = ref(null);
+const preview = ref(null);
 
 function onFileChange(event) {
   file.value = event.target.files[0];
+  preview.value = URL.createObjectURL(file.value);
 }
 
 function onFileClick() {
   // Reset the file value to allow the user to choose a new file
   file.value = null;
+  preview.value = null;
 }
 
 async function uploadFile() {
@@ -111,16 +122,16 @@ async function uploadFile() {
       "Download URL:",
       downloadURL
     );
-    alert("L'image a bien été importée");
 
     // Ajouter une nouvelle entrée dans le tableau "photos" avec les informations de la photo téléchargée
-    const userRef = doc(db, "Users", "O3OQM1BPFrT3vcmduXq1aDOhuAA2")
+    const userRef = doc(db, "Users", VueCookies.get("userId"))
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
       const photos = docSnap.data().photos || [];
       photos.push({
         id: fileName,
         uri: downloadURL,
+        userId: VueCookies.get("userId"),
       });
       updateDoc(userRef, { photos: photos })
     } else {
