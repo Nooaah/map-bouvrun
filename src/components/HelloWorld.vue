@@ -82,9 +82,8 @@ const register = () => {
     .then((data) => {
       console.log("bien enregistré");
       console.log(auth.currentUser);
-      VueCookies.remove("userId");
       VueCookies.set("userId", auth.currentUser.uid);
-      router.push("/map");
+      window.location.href = "/map";
       errMessage.value = "";
     })
     .catch((error) => {

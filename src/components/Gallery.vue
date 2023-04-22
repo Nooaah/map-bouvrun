@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row justify="center" style="margin-top: 10px;">
       <v-col v-for="(photo, index) in photos" :key="index" cols="12" md="6" lg="4" class="text-center">
-        <v-card :disabled="userId == photo.userId" @click="voteForPhoto(photo.id)">
+        <v-card :disabled="userId == photo.userId" @click="voteForPhoto(photo.id)" min-height="150px">
           <v-img :src="photo.uri" max-width="100%"></v-img>
           <p style="margin: 10px 0 10px 0;"><b>{{ index + 1 }}</b> <v-icon class="mr-2 mdi" color="yellow darken-2"
               style="text-shadow: 0px 0px 2px black">mdi-trophy</v-icon>
