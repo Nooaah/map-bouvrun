@@ -11,7 +11,7 @@
         <v-list density="compact" nav>
           <v-list-item
             prepend-icon="mdi-home"
-            title="Accueil"
+            title="Se connecter"
             value="accueil"
             to="/"
           ></v-list-item>
@@ -23,7 +23,7 @@
           ></v-list-item>
           <v-list-item
             prepend-icon="mdi-view-gallery-outline"
-            title="Galerie Photo"
+            title="Concours Photo"
             value="gallery"
             to="/gallery"
           ></v-list-item>

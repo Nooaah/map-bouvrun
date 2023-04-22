@@ -8,7 +8,9 @@
       <img class="preview-image" :src="preview" alt="Aperçu de l'image"/>
     </div>
 
-    <button class="submit-btn" @click.prevent="uploadFile">Envoyer</button>
+    <button class="submit-btn" :disabled="loading" @click.prevent="uploadFile">
+      {{ loading ? 'Envoi en cours...' : 'Envoyer' }}
+    </button>
   </form>
   <form v-else>
     <label for="file-input" class="file-input-label">
@@ -93,6 +95,7 @@ import VueCookies from "vue-cookies";
 
 const file = ref(null);
 const preview = ref(null);
+const loading = ref(false);
 
 function onFileChange(event) {
   file.value = event.target.files[0];
@@ -110,6 +113,8 @@ async function uploadFile() {
     if (!file.value) {
       return;
     }
+    loading.value = true; // activation du chargement
+
     const fileName = `${Math.random()
       .toString(36)
       .substr(2, 8)}-${Date.now()}.jpg`;
@@ -130,11 +135,13 @@ async function uploadFile() {
       userId: VueCookies.get("userId"),
       voters: []
     }).then(() => {
-      alert('ok')
+      alert('Votre photo a été ajoutée au concours !')
     });
 
+    loading.value = false; // réinitialisation du chargement
   } catch (error) {
     console.error(error);
   }
 }
+
 </script>
