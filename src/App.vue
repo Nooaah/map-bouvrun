@@ -3,7 +3,7 @@
       <v-navigation-drawer v-model="drawer" temporary>
         <v-list-item
           prepend-avatar="@/assets/img/censelette.png"
-          title="Participant 312"
+          title="Bouv'Run App"
         ></v-list-item>
 
         <v-divider></v-divider>

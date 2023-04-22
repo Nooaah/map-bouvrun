@@ -2,8 +2,11 @@
   <v-container fluid>
     <v-row justify="center" style="margin-top: 10px;">
       <v-col v-for="(photo, index) in photos" :key="index" cols="12" md="6" lg="4" class="text-center">
-        <v-card @click="voteForPhoto(photo.id)">
+        <v-card :disabled="userId == photo.userId" @click="voteForPhoto(photo.id)">
           <v-img :src="photo.uri" max-width="100%"></v-img>
+          <p style="margin: 10px 0 10px 0;"><b>{{ index + 1 }}</b> <v-icon class="mr-2 mdi" color="yellow darken-2"
+              style="text-shadow: 0px 0px 2px black">mdi-trophy</v-icon>
+            ({{ photo.voters.length }} vote{{ photo.voters.length > 1 ? "s" : "" }})</p>
         </v-card>
       </v-col>
     </v-row>
@@ -15,17 +18,14 @@
     </v-snackbar>
   </v-container>
 </template>
-
-
-
 <script setup>
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../main";
-import { collection, addDoc, setDoc, updateDoc, doc, getDocs, getDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, updateDoc, doc, getDocs, getDoc, onSnapshot } from "firebase/firestore";
 import VueCookies from "vue-cookies";
 
-const usersCollection = collection(db, "Users");
+const photosCollection = collection(db, "Photos");
 const photos = ref([]);
 const userId = VueCookies.get("userId");
 
@@ -34,37 +34,27 @@ const snackbarColor = ref('success');
 const successSnackbarMessage = "Vote pris en compte !";
 const showSuccessSnackbar = ref(false);
 
-
-// Récupérer tous les documents de la collection Users
-getDocs(usersCollection)
-  .then((querySnapshot) => {
+// Récupérer les documents de la collection Users en temps réel
+watchEffect(() => {
+  onSnapshot(photosCollection, (snapshot) => {
     const photosMap = new Map();
 
     // Itérer sur chaque document
-    querySnapshot.forEach((doc) => {
+    snapshot.forEach((doc) => {
       const data = doc.data();
-
-      // Vérifier si le document a un champ "photos" et que c'est un tableau
-      if (data.hasOwnProperty("photos") && Array.isArray(data.photos)) {
-        const photos = data.photos;
-
-        // Itérer sur chaque photo du document et les ajouter à la Map
-        photos.forEach((photo) => {
-          if (photo.userId != userId)
-            photosMap.set(photo.id, photo);
-        });
-      }
+      photosMap.set(data.id, data);
     });
 
     // Utiliser la Map contenant toutes les photos
-    photos.value = Array.from(photosMap.values());
-    console.log(photos.value);
-  })
-  .catch((error) => {
-    console.error("Error getting documents: ", error);
-  });
+    const photosArray = Array.from(photosMap.values());
+    photosArray.sort((photo1, photo2) => {
+      return photo2.voters.length - photo1.voters.length;
+    });
+    photos.value = photosArray;
 
-// Fonction pour voter pour une photo
+  });
+});
+
 // Fonction pour voter pour une photo
 const voteForPhoto = async (photoId) => {
 
@@ -73,56 +63,60 @@ const voteForPhoto = async (photoId) => {
     return;
   }
 
-  // Récupérer tous les documents de la collection Poll
-  const pollCollection = collection(db, "Poll");
-  const querySnapshot = await getDocs(pollCollection);
+  // Récupérer tous les documents de la collection Photos
+  const photosCollection = collection(db, "Photos");
+  const querySnapshot = await getDocs(photosCollection);
 
   // Vérifier si l'utilisateur a déjà voté pour une photo
-  let oldVoteDoc;
   querySnapshot.forEach((doc) => {
     const data = doc.data();
 
     if (data.hasOwnProperty("voters") && Array.isArray(data.voters)) {
       const voters = data.voters;
-
-      // Si l'utilisateur a déjà voté, supprimer son vote
-      if (voters.indexOf(userId) !== -1) {
-        oldVoteDoc = doc;
-        const newVoters = voters.filter((voter) => voter !== userId);
-        updateDoc(doc.ref, { voters: newVoters });
+      let index = voters.indexOf(userId);
+      if (index !== -1) {
+        // La valeur est présente dans le tableau, la supprimer
+        voters.splice(index, 1);
       }
+      updateDoc(doc.ref, { voters: voters });
     }
   });
 
-  const photoDocRef = doc(db, "Poll", photoId);
+  const photoDocRef = doc(db, "Photos", photoId);
   const photoDoc = await getDoc(photoDocRef);
+  let data = photoDoc.data();
 
-  if (photoDoc.exists()) {
-    const voters = photoDoc.data().voters;
-
-    if (voters && voters.indexOf(userId) !== -1) {
-      console.log(`User ${userId} has already voted for photo ${photoId}.`);
-      return;
-    }
-
-    await updateDoc(photoDocRef, {
-      voters: [...(voters || []), userId],
-    });
-    console.log(`User ${userId} has voted for photo ${photoId}.`);
-  } else {
-    await setDoc(photoDocRef, {
-      voters: [userId],
-    });
-    console.log(`User ${userId} has voted for photo ${photoId}.`);
+  // Vérifier si la photo existe dans la collection Photos
+  if (!photoDoc.exists()) {
+    console.error("Photo not found in Photos collection.");
+    return;
   }
+
+  // Ajouter l'utilisateur aux votants
+  let voters = data.voters;
+  voters.push(userId);
+  updateDoc(photoDocRef, { voters: voters });
+
+  // Afficher un message de succès
   showSuccessSnackbar.value = true;
+  setTimeout(() => {
+    showSuccessSnackbar.value = false;
+  }, 2000);
 };
-
-
 </script>
 
-<style scoped>
-  .v-image__image {
-    object-fit: contain;
-  }
+<style>
+.rank {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #eee;
+  margin-right: 10px;
+  line-height: 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 </style>

@@ -123,20 +123,15 @@ async function uploadFile() {
       downloadURL
     );
 
-    // Ajouter une nouvelle entrée dans le tableau "photos" avec les informations de la photo téléchargée
-    const userRef = doc(db, "Users", VueCookies.get("userId"))
-    const docSnap = await getDoc(userRef);
-    if (docSnap.exists()) {
-      const photos = docSnap.data().photos || [];
-      photos.push({
-        id: fileName,
-        uri: downloadURL,
-        userId: VueCookies.get("userId"),
-      });
-      updateDoc(userRef, { photos: photos })
-    } else {
-      console.log("Le document n'existe pas");
-    }
+    const newPhotoRef = doc(db, "Photos", fileName);
+    await setDoc(newPhotoRef, {
+      id: fileName,
+      uri: downloadURL,
+      userId: VueCookies.get("userId"),
+      voters: []
+    }).then(() => {
+      alert('ok')
+    });
 
   } catch (error) {
     console.error(error);
