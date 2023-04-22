@@ -1,6 +1,9 @@
 <template>
   <v-container fluid>
-    <v-row justify="center" style="margin-top: 10px;">
+    <v-row style="margin: 10px 0 25px 0;">
+      Votez en cliquant votre photo préférée de la Bouv'Run 2023 ! Ajoutez votre photo dans <i>Envoyer ma photo</i>
+    </v-row>
+    <v-row justify="center">
       <v-col v-for="(photo, index) in photos" :key="index" cols="12" md="6" lg="4" class="text-center">
         <v-card :disabled="userId == photo.userId" @click="voteForPhoto(photo.id)" min-height="150px">
           <v-img :src="photo.uri" max-width="100%"></v-img>
