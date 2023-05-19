@@ -1,24 +1,29 @@
 <template>
-  <form class="form" v-if="file">
-    <label for="file-input" class="file-label" @click="onFileClick">{{
-      file.name
-    }}</label>
-    <input id="file-input" type="file" @change="onFileChange" hidden />
-    <div class="preview-image-container" v-if="preview">
-      <img class="preview-image" :src="preview" alt="Aperçu de l'image"/>
-    </div>
+  <div v-if="userId">
+    <form class="form" v-if="file">
+      <label for="file-input" class="file-label" @click="onFileClick">{{
+        file.name
+      }}</label>
+      <input id="file-input" type="file" @change="onFileChange" hidden />
+      <div class="preview-image-container" v-if="preview">
+        <img class="preview-image" :src="preview" alt="Aperçu de l'image" />
+      </div>
 
-    <button class="submit-btn" :disabled="loading" @click.prevent="uploadFile">
-      {{ loading ? 'Envoi en cours...' : 'Envoyer' }}
-    </button>
-  </form>
-  <form v-else>
-    <label for="file-input" class="file-input-label">
-      <span class="plus-icon">+</span>
-      <span class="file-input-text">Importer une image</span>
-    </label>
-    <input id="file-input" type="file" @change="onFileChange" hidden />
-  </form>
+      <button class="submit-btn" :disabled="loading" @click.prevent="uploadFile">
+        {{ loading ? 'Envoi en cours...' : 'Envoyer' }}
+      </button>
+    </form>
+    <form v-else>
+      <label for="file-input" class="file-input-label">
+        <span class="plus-icon">+</span>
+        <span class="file-input-text">Importer une image</span>
+      </label>
+      <input id="file-input" type="file" @change="onFileChange" hidden />
+    </form>
+  </div>
+  <div v-else id="login_to_send">
+    Connectez-vous pour envoyer vos photos sur le concours !
+  </div>
 </template>
 <style scoped>
 .file-label {
@@ -62,6 +67,7 @@
 .hidden-input {
   display: none;
 }
+
 .preview-image-container {
   display: flex;
   justify-content: center;
@@ -73,6 +79,10 @@
   max-width: 100%;
   width: 100vw;
 }
+
+#login_to_send {
+  padding: 20px;
+}
 </style>
 <script setup>
 import { ref } from "vue";
@@ -80,6 +90,8 @@ import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/
 import { db } from "../main";
 import { collection, addDoc, setDoc, updateDoc, doc, getDoc } from "firebase/firestore";
 import VueCookies from "vue-cookies";
+
+const userId = VueCookies.get("userId");
 
 const file = ref(null);
 const preview = ref(null);

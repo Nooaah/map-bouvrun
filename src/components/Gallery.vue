@@ -1,7 +1,8 @@
 <template>
   <v-container fluid>
     <v-row style="margin: 10px 0 25px 0;">
-      Votez en cliquant votre photo préférée de la Bouv'Run 2023 ! Ajoutez votre photo en vous connectant, puis dans&nbsp;<i>"Envoyer ma photo"</i>
+      Votez en cliquant sur votre photo préférée de la Bouv'Run 2023 ! Ajoutez votre propre photo en vous connectant, puis
+      dans la section&nbsp;<i>"Envoyer ma photo"</i>
     </v-row>
     <v-row justify="center">
       <v-col v-for="(photo, index) in photos" :key="index" cols="12" md="6" lg="4" class="text-center">
@@ -13,10 +14,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-snackbar v-model="snackbar" :color="snackbarColor" top right>
-      {{ successSnackbarMessage }}
-    </v-snackbar>
-    <v-snackbar v-model="showSuccessSnackbar" color="success" top right>
+    <v-snackbar v-model="showSuccessSnackbar" :color="snackbarColor" top right>
       {{ successSnackbarMessage }}
     </v-snackbar>
   </v-container>
@@ -32,10 +30,20 @@ const photosCollection = collection(db, "Photos");
 const photos = ref([]);
 const userId = VueCookies.get("userId");
 
-const snackbar = ref(false);
-const snackbarColor = ref('success');
-const successSnackbarMessage = "Vote pris en compte !";
-const showSuccessSnackbar = ref(false);
+var snackbar = ref(false);
+var snackbarColor = ref("");
+var successSnackbarMessage = ref("");
+var showSuccessSnackbar = ref(false);
+
+function showSnackBar(color, message, time) {
+  // Afficher un message de succès
+  successSnackbarMessage = message;
+  snackbarColor = color;
+  showSuccessSnackbar.value = true;
+  setTimeout(() => {
+    showSuccessSnackbar.value = false;
+  }, time);
+}
 
 // Récupérer les documents de la collection Users en temps réel
 watchEffect(() => {
@@ -63,6 +71,7 @@ const voteForPhoto = async (photoId) => {
 
   if (!userId) {
     console.error("User ID not found in cookies.");
+    showSnackBar("error", "Connectez-vous avec votre identifiant (sur le ticket tombola) pour voter", 5000);
     return;
   }
 
@@ -100,11 +109,8 @@ const voteForPhoto = async (photoId) => {
   voters.push(userId);
   updateDoc(photoDocRef, { voters: voters });
 
-  // Afficher un message de succès
-  showSuccessSnackbar.value = true;
-  setTimeout(() => {
-    showSuccessSnackbar.value = false;
-  }, 2000);
+  showSnackBar("success", "Vote pris en compte !", 2000);
+
 };
 </script>
 
