@@ -3,12 +3,8 @@
     <h1>Se connecter</h1>
     <form>
       <label>
-        Numéro d'inscrit
+        Identifiant Bouv'Run
         <input type="text" placeholder="Numéro d'inscrit" v-model="email" />
-      </label>
-      <label>
-        Mot de passe
-        <input type="password" placeholder="Mot de passe" v-model="password" />
       </label>
       <p v-if="errMessage" class="error-message">{{ errMessage }}</p>
       <button @click.prevent="register">Connexion</button>
@@ -74,11 +70,11 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import VueCookies from "vue-cookies";
 
 const email = ref("");
-const password = ref("");
+const password = "teamBouvrun";
 const errMessage = ref("");
 const register = () => {
   const auth = getAuth();
-  signInWithEmailAndPassword(auth, email.value + "@gmail.com", password.value)
+  signInWithEmailAndPassword(auth, email.value + "@gmail.com", password)
     .then((data) => {
       console.log("bien enregistré");
       console.log(auth.currentUser);
@@ -89,13 +85,13 @@ const register = () => {
     .catch((error) => {
       switch (error.code) {
         case "auth/invalid-email":
-          errMessage.value = "Mauvais adresse Email";
+          errMessage.value = "Mauvais identifiant";
           break;
         case "auth/user-not-found":
           errMessage.value = "Aucun compte trouvé";
           break;
         case "auth/wrong-password":
-          errMessage.value = "Mot de passe incorrect";
+          errMessage.value = "Erreur de connexion";
           break;
         default:
           errMessage.value = "";

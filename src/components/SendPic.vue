@@ -81,18 +81,6 @@ import { db } from "../main";
 import { collection, addDoc, setDoc, updateDoc, doc, getDoc } from "firebase/firestore";
 import VueCookies from "vue-cookies";
 
-/* try {
-  const docRef = await addDoc(collection(db, "Users"), {
-    first: "Ada",
-    last: "Lovelace",
-    born: 1815
-  });
-  console.log("Document written with ID: ", docRef.id);
-} catch (e) {
-  console.error("Error adding document: ", e);
-} */
-
-
 const file = ref(null);
 const preview = ref(null);
 const loading = ref(false);
