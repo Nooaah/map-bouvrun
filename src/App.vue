@@ -18,8 +18,8 @@
           <v-list-item
             prepend-icon="mdi-map"
             title="Itinéraires"
-            value="map"
-            to="/map"
+            value="map65"
+            to="/map65"
           ></v-list-item>
           <v-list-item
             prepend-icon="mdi-view-gallery-outline"

@@ -79,7 +79,7 @@ const register = () => {
       console.log("bien enregistré");
       console.log(auth.currentUser);
       VueCookies.set("userId", auth.currentUser.uid);
-      window.location.href = "/map";
+      alert("Vous êtes connecté, vous pouvez maintenant participer au concours en envoyant vos photos !");
       errMessage.value = "";
     })
     .catch((error) => {
